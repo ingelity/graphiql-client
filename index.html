@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>GraphiQL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/graphiql/0.12.0/graphiql.css" />
+    <style>
+      input {
+        height: 30px;
+        width: 320px;
+        display: block;
+        margin: 10px auto;
+        padding: 0 10px;
+        border: none;
+        border-bottom: solid 1px lightgray;
+      }
+    </style>
+  </head>
+  <body style="height: 100vh; margin: 0; padding: 0">
+    <input type="text" autofocus placeholder="input your /graphql endpoint url"></input>
+    <div id="app" style="height: calc(100vh - 51px)"></div>
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/graphiql/0.12.0/graphiql.js"></script>
+    <script>
+      const input = document.querySelector('input');
+      let apiUrl = '/graphql';
+
+      function graphQLFetcher(graphQLParams) {
+        return fetch(apiUrl, {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(graphQLParams),
+        }).then(response => response.json());
+      }
+
+      input.addEventListener('keypress', event => {
+        if (event.which === 13 || event.keyCode === 13) {
+          apiUrl = input.value;
+          ReactDOM.render(
+            React.createElement(GraphiQL, { fetcher: graphQLFetcher }, null),
+            document.getElementById('app'),
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
